@@ -71,6 +71,7 @@ button, .stepper-btn, .choice-btn, .nav-btn, .app-header, .progress-track{
   margin:0;
   letter-spacing:.02em;
 }
+.app-header h1[role="button"]{cursor:pointer;}
 .header-actions{display:flex; gap:8px;}
 .icon-btn{
   width:38px;height:38px;border-radius:50%;
