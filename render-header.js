@@ -6,10 +6,11 @@ function headerHtml(title, opts = {}) {
   const editBtn = opts.showEdit
     ? `<button class="icon-btn" id="editQuestionBtn" aria-label="${escapeHtml(t('editThisQuestion'))}" title="${escapeHtml(t('editThisQuestion'))}">✎</button>`
     : '';
+  const titleAttr = opts.onTitleClick ? ' id="headerTitle" role="button"' : '';
   return `
     <div class="app-header">
       ${backBtn}
-      <h1>${escapeHtml(title)}</h1>
+      <h1${titleAttr}>${escapeHtml(title)}</h1>
       <div class="header-actions">
         ${editBtn}
         <button class="icon-btn" id="openSettingsBtn" aria-label="${escapeHtml(t('settingsBtnLabel'))}">Aa</button>
@@ -20,6 +21,43 @@ function headerHtml(title, opts = {}) {
 function bindHeaderCommon() {
   const settingsBtn = document.getElementById('openSettingsBtn');
   if (settingsBtn) settingsBtn.onclick = openSettingsSheet;
+}
+
+/* ------------------------------ 問題番号ジャンプシート ------------------------------ */
+function openJumpSheet() {
+  const { questions, index } = state.quiz;
+  const total = questions.length;
+
+  const layer = document.getElementById('sheetLayer');
+  const backdrop = document.createElement('div');
+  backdrop.className = 'sheet-backdrop';
+  backdrop.innerHTML = `
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <h2 class="sheet-title">${escapeHtml(t('jumpTitle'))}</h2>
+      <div>
+        <label class="field-label" for="jumpNumberInput">${escapeHtml(t('jumpLabel', total))}</label>
+        <input id="jumpNumberInput" type="number" min="1" max="${total}" value="${index + 1}" class="editor-textarea">
+      </div>
+      <div class="btn-row" style="margin-top:16px;">
+        <button class="btn btn-outline" id="cancelJumpBtn">${escapeHtml(t('cancel'))}</button>
+        <button class="btn btn-primary" id="goJumpBtn">${escapeHtml(t('jumpGo'))}</button>
+      </div>
+    </div>
+  `;
+  layer.appendChild(backdrop);
+
+  backdrop.onclick = (e) => { if (e.target === backdrop) backdrop.remove(); };
+  document.getElementById('cancelJumpBtn').onclick = () => backdrop.remove();
+
+  document.getElementById('goJumpBtn').onclick = () => {
+    const n = parseInt(document.getElementById('jumpNumberInput').value, 10);
+    const target = Math.min(Math.max(n, 1), total) - 1;
+    backdrop.remove();
+    state.quiz.index = target;
+    renderQuiz();
+    scrollQuizToTop();
+  };
 }
 
 /* ------------------------------ 設定シート（文字サイズ・言語） ------------------------------ */
