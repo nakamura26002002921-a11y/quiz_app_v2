@@ -3,7 +3,15 @@ const APP_SHELL = [
   './',
   './index.html',
   './style.css',
-  './app.js',
+  './i18n.js',
+  './state.js',
+  './csv.js',
+  './utils.js',
+  './render-header.js',
+  './render-home.js',
+  './render-quiz.js',
+  './render-result.js',
+  './main.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -32,23 +40,19 @@ self.addEventListener('fetch', (event) => {
   // Googleフォントなど外部リクエストはネットワーク優先
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) {
-    event.respondWith(
-      fetch(req).catch(() => caches.match(req))
-    );
+    event.respondWith(fetch(req));
     return;
   }
 
   event.respondWith(
     caches.match(req).then((cached) => {
-      const networkFetch = fetch(req)
-        .then((res) => {
-          if (res && res.status === 200) {
-            const resClone = res.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
-          }
-          return res;
-        })
-        .catch(() => cached);
+      const networkFetch = fetch(req).then((res) => {
+        if (res && res.status === 200) {
+          const resClone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+        }
+        return res;
+      });
       return cached || networkFetch;
     })
   );
