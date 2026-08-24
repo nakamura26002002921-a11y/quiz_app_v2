@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CSVクイズ</title>
+<meta name="theme-color" content="#2f3b52">
+<meta name="description" content="CSVから問題を読み込んで出題するクイズアプリ">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app"></div>
+<div id="sheetLayer"></div>
+<div id="toast" class="toast hidden"></div>
+
+<script src="i18n.js"></script>
+<script src="state.js"></script>
+<script src="csv.js"></script>
+<script src="utils.js"></script>
+<script src="render-header.js"></script>
+<script src="render-home.js"></script>
+<script src="render-quiz.js"></script>
+<script src="render-result.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
