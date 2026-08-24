@@ -32,7 +32,6 @@ const state = {
   route: 'home',          // 'home' | 'quiz' | 'result'
   choiceCount: parseInt(localStorage.getItem(LS_KEYS.choiceCount) || '4', 10),
   shuffleOrder: localStorage.getItem(LS_KEYS.shuffle) !== 'false',
-  errorMessage: null,
   quiz: null,              // { questions: [...], answers: [...], index: 0 }
 };
 
