@@ -40,6 +40,9 @@ const I18N = {
     cancel: 'キャンセル',
     editSaved: '問題を更新しました',
     settingsBtnLabel: '表示設定',
+    jumpTitle: '問題へ移動',
+    jumpLabel: n => `番号を入力（1〜${n}）`,
+    jumpGo: '移動する',
   },
   en: {
     appTitle: 'CSV Quiz',
@@ -78,6 +81,9 @@ const I18N = {
     cancel: 'Cancel',
     editSaved: 'Question updated',
     settingsBtnLabel: 'Display settings',
+    jumpTitle: 'Jump to question',
+    jumpLabel: n => `Enter a number (1-${n})`,
+    jumpGo: 'Go',
   },
   ru: {
     appTitle: 'CSV-Викторина',
@@ -116,6 +122,9 @@ const I18N = {
     cancel: 'Отмена',
     editSaved: 'Вопрос обновлён',
     settingsBtnLabel: 'Настройки отображения',
+    jumpTitle: 'Перейти к вопросу',
+    jumpLabel: n => `Введите номер (1-${n})`,
+    jumpGo: 'Перейти',
   },
 };
 
