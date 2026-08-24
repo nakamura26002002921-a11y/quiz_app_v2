@@ -27,8 +27,6 @@ function renderHome() {
 
       <input type="file" id="csvFileInput" accept=".csv,text/csv" style="display:none;">
       <button class="btn btn-primary" id="pickCsvBtn">${escapeHtml(t('pickCsv'))}</button>
-
-      ${state.errorMessage ? `<div class="error-box">${escapeHtml(state.errorMessage)}</div>` : ''}
     </div>
   `;
 
@@ -56,13 +54,7 @@ function renderHome() {
 }
 
 function startQuizFromCsvText(csvText) {
-  const result = loadQuestionsFromCsv(csvText);
-  if (!result.questions) {
-    state.errorMessage = result.errorMessage;
-    renderHome();
-    return;
-  }
-  let sourceQuestions = result.questions; // 元データ（編集時に直接書き換える）
+  let sourceQuestions = loadQuestionsFromCsv(csvText); // 元データ（編集時に直接書き換える）
   let order = sourceQuestions.map((_, i) => i);
   if (state.shuffleOrder) order = shuffleArray(order);
 
@@ -78,7 +70,6 @@ function startQuizFromCsvText(csvText) {
     answers: new Array(quizQuestions.length).fill(null),
     index: 0,
   };
-  state.errorMessage = null;
   state.route = 'quiz';
   render();
 }
