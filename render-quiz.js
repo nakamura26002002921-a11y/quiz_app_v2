@@ -9,7 +9,7 @@ function renderQuiz() {
 
   const app = document.getElementById('app');
   app.innerHTML = `
-    ${headerHtml(t('quizTitle', index + 1, total), { onBack: true, showEdit: true })}
+    ${headerHtml(t('quizTitle', index + 1, total), { onBack: true, showEdit: true, onTitleClick: true })}
     <div class="progress-wrap">
       <div class="progress-track"><div class="progress-fill" style="width:${((index) / total) * 100}%;"></div></div>
       <div class="progress-caption"><span>${escapeHtml(t('progress'))}</span><span>${index + 1} / ${total}</span></div>
@@ -62,6 +62,7 @@ function renderQuiz() {
 
   bindHeaderCommon();
   document.getElementById('editQuestionBtn').onclick = openEditQuestionSheet;
+  document.getElementById('headerTitle').onclick = openJumpSheet;
   document.getElementById('headerBack').onclick = () => {
     if (confirm(t('quizExitConfirm'))) {
       state.quiz = null;
@@ -107,7 +108,6 @@ function scrollQuizToTop() {
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
-/* ------------------------------ 出題中の問題編集シート ------------------------------ */
 function openEditQuestionSheet() {
   const { questions, index } = state.quiz;
   const current = questions[index];
@@ -136,8 +136,6 @@ function openEditQuestionSheet() {
         </div>
       </div>
 
-      <div id="editQuestionError"></div>
-
       <div class="btn-row" style="margin-top:16px;">
         <button class="btn btn-outline" id="cancelEditQuestionBtn">${escapeHtml(t('cancel'))}</button>
         <button class="btn btn-primary" id="saveEditQuestionBtn">${escapeHtml(t('save'))}</button>
@@ -153,12 +151,6 @@ function openEditQuestionSheet() {
     const q = document.getElementById('editQuestionText').value.trim();
     const a = document.getElementById('editAnswerText').value.trim();
     const ex = document.getElementById('editExplanationText').value.trim();
-
-    if (!q || !a) {
-      document.getElementById('editQuestionError').innerHTML =
-        `<div class="editor-errors">${escapeHtml(t('fieldRequired'))}</div>`;
-      return;
-    }
 
     // 元データを直接更新（同一オブジェクト参照）
     current.data.question = q;
