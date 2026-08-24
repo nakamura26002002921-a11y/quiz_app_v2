@@ -39,11 +39,9 @@ function stripBom(text) {
   return text.charCodeAt(0) === 0xFEFF ? text.slice(1) : text;
 }
 
-// CSVテキスト -> { questions, errorMessage }
+// CSVテキスト -> questions配列
 function loadQuestionsFromCsv(rawText) {
   const text = stripBom(rawText || '');
-  if (!text.trim()) return { questions: null, errorMessage: t('errorEmpty') };
-
   const rows = parseCsv(text);
   let startIndex = 0;
   if (rows[0].join('').includes('問題') || /question/i.test(rows[0].join(''))) startIndex = 1;
@@ -51,16 +49,12 @@ function loadQuestionsFromCsv(rawText) {
   const questions = [];
   for (let i = startIndex; i < rows.length; i++) {
     const row = rows[i];
-    if (row.length < 3) continue;
     const question = (row[0] || '').trim();
     const answer = (row[1] || '').trim();
     const explanation = (row[2] || '').trim();
-    if (!question || !answer) continue;
     questions.push({ question, answer, explanation });
   }
-
-  if (questions.length === 0) return { questions: null, errorMessage: t('errorNoValid') };
-  return { questions, errorMessage: null };
+  return questions;
 }
 
 function shuffleArray(arr) {
