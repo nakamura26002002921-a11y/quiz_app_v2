@@ -16,6 +16,7 @@ const LS_KEYS = {
   choiceCount: 'quizapp.choiceCount',
   shuffle: 'quizapp.shuffleOrder',
   lang: 'quizapp.lang',
+  skipStep: 'quizapp.skipStep',
 };
 
 function getLang() {
@@ -32,6 +33,7 @@ const state = {
   route: 'home',          // 'home' | 'quiz' | 'result'
   choiceCount: parseInt(localStorage.getItem(LS_KEYS.choiceCount) || '4', 10),
   shuffleOrder: localStorage.getItem(LS_KEYS.shuffle) !== 'false',
+  skipStep: parseInt(localStorage.getItem(LS_KEYS.skipStep) || '5', 10), // n問飛ばし移動の既定値
   quiz: null,              // { questions: [...], answers: [...], index: 0 }
 };
 

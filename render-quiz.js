@@ -52,8 +52,14 @@ function renderQuiz() {
       ` : ''}
     </div>
 
+    <div class="quiz-nav-skip" style="padding-left:18px; padding-right:18px;">
+      <label class="field-label" for="skipStepInput" style="margin:0;">${escapeHtml(t('skipStepLabel'))}</label>
+      <input id="skipStepInput" type="number" min="1" class="skip-step-input" value="${state.skipStep}">
+    </div>
     <div class="quiz-nav" style="padding-left:18px; padding-right:18px;">
       <button class="btn btn-outline nav-btn" id="prevBtn" ${index === 0 ? 'disabled' : ''}>${escapeHtml(t('prev'))}</button>
+      <button class="btn btn-outline nav-btn" id="skipPrevBtn" ${index === 0 ? 'disabled' : ''}>${escapeHtml(t('skipPrev', state.skipStep))}</button>
+      <button class="btn btn-outline nav-btn" id="skipNextBtn" ${(!answered || index === total - 1) ? 'disabled' : ''}>${escapeHtml(t('skipNext', state.skipStep))}</button>
       <button class="btn btn-primary nav-btn" id="nextBtn" ${answered ? '' : 'disabled'}>
         ${escapeHtml(index === total - 1 ? t('seeResult') : t('next'))}
       </button>
@@ -80,25 +86,39 @@ function renderQuiz() {
     });
   }
 
-  document.getElementById('prevBtn').onclick = () => {
-    if (state.quiz.index > 0) {
-      state.quiz.index -= 1;
-      renderQuiz();
-      scrollQuizToTop();
-    }
+  document.getElementById('prevBtn').onclick = () => moveIndexBy(-1);
+  document.getElementById('skipPrevBtn').onclick = () => moveIndexBy(-state.skipStep);
+  document.getElementById('skipNextBtn').onclick = () => {
+    if (!answered) return;
+    moveIndexBy(state.skipStep);
   };
+
+  // n（移動数）を変更したら保存し、次の描画からボタン表記・移動幅に反映
+  document.getElementById('skipStepInput').onchange = (e) => {
+    const n = Math.max(1, parseInt(e.target.value, 10) || 1);
+    state.skipStep = n;
+    localStorage.setItem(LS_KEYS.skipStep, String(n));
+    renderQuiz();
+  };
+
   document.getElementById('nextBtn').onclick = () => {
     if (!answered) return;
     if (state.quiz.index === total - 1) {
       state.route = 'result';
       render();
     } else {
-      state.quiz.index += 1;
-      renderQuiz();
-      scrollQuizToTop();
+      moveIndexBy(1);
     }
   };
 
+  scrollQuizToTop();
+}
+
+// indexをdelta分移動（0〜total-1の範囲にクランプ）
+function moveIndexBy(delta) {
+  const total = state.quiz.questions.length;
+  state.quiz.index = Math.min(Math.max(state.quiz.index + delta, 0), total - 1);
+  renderQuiz();
   scrollQuizToTop();
 }
 

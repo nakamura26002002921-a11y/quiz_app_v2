@@ -43,6 +43,9 @@ const I18N = {
     jumpTitle: '問題へ移動',
     jumpLabel: n => `番号を入力（1〜${n}）`,
     jumpGo: '移動する',
+    skipPrev: n => `${n}問前へ`,
+    skipNext: n => `${n}問次へ`,
+    skipStepLabel: '移動数',
   },
   en: {
     appTitle: 'CSV Quiz',
@@ -84,6 +87,9 @@ const I18N = {
     jumpTitle: 'Jump to question',
     jumpLabel: n => `Enter a number (1-${n})`,
     jumpGo: 'Go',
+    skipPrev: n => `${n} back`,
+    skipNext: n => `${n} forward`,
+    skipStepLabel: 'Step size',
   },
   ru: {
     appTitle: 'CSV-Викторина',
@@ -125,6 +131,9 @@ const I18N = {
     jumpTitle: 'Перейти к вопросу',
     jumpLabel: n => `Введите номер (1-${n})`,
     jumpGo: 'Перейти',
+    skipPrev: n => `Назад на ${n}`,
+    skipNext: n => `Вперёд на ${n}`,
+    skipStepLabel: 'Шаг',
   },
 };
 
