@@ -58,11 +58,11 @@ function renderQuiz() {
     </div>
     <div class="quiz-nav" style="padding-left:18px; padding-right:18px;">
       <button class="btn btn-outline nav-btn" id="prevBtn" ${index === 0 ? 'disabled' : ''}>${escapeHtml(t('prev'))}</button>
-      <button class="btn btn-outline nav-btn" id="skipPrevBtn" ${index === 0 ? 'disabled' : ''}>${escapeHtml(t('skipPrev', state.skipStep))}</button>
-      <button class="btn btn-outline nav-btn" id="skipNextBtn" ${(!answered || index === total - 1) ? 'disabled' : ''}>${escapeHtml(t('skipNext', state.skipStep))}</button>
       <button class="btn btn-primary nav-btn" id="nextBtn" ${answered ? '' : 'disabled'}>
         ${escapeHtml(index === total - 1 ? t('seeResult') : t('next'))}
       </button>
+      <button class="btn btn-outline nav-btn" id="skipPrevBtn" ${index === 0 ? 'disabled' : ''}>${escapeHtml(t('skipPrev', state.skipStep))}</button>
+      <button class="btn btn-outline nav-btn" id="skipNextBtn" ${(!answered || index === total - 1) ? 'disabled' : ''}>${escapeHtml(t('skipNext', state.skipStep))}</button>
     </div>
   `;
 
