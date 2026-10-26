@@ -6,12 +6,16 @@ function headerHtml(title, opts = {}) {
   const editBtn = opts.showEdit
     ? `<button class="icon-btn" id="editQuestionBtn" aria-label="${escapeHtml(t('editThisQuestion'))}" title="${escapeHtml(t('editThisQuestion'))}">✎</button>`
     : '';
+  const hintBtn = opts.showHint
+    ? `<button class="icon-btn hint-btn ${opts.hintActive ? 'is-active' : ''}" id="hintBtn" ${opts.hintDisabled ? 'disabled' : ''} aria-pressed="${opts.hintActive ? 'true' : 'false'}" aria-label="${escapeHtml(t('hintBtnLabel'))}" title="${escapeHtml(t('hintBtnLabel'))}">💡</button>`
+    : '';
   const titleAttr = opts.onTitleClick ? ' id="headerTitle" role="button"' : '';
   return `
     <div class="app-header">
       ${backBtn}
       <h1${titleAttr}>${escapeHtml(title)}</h1>
       <div class="header-actions">
+        ${hintBtn}
         ${editBtn}
         <button class="icon-btn" id="openSettingsBtn" aria-label="${escapeHtml(t('settingsBtnLabel'))}">Aa</button>
       </div>
@@ -93,6 +97,14 @@ function openSettingsSheet() {
       <input id="fontSlider" type="range" min="80" max="180" step="10" value="${currentPct}">
       <p class="preview-text selectable-text" id="fontPreview">${escapeHtml(t('previewText'))}</p>
 
+      <div class="setting-row">
+        <span class="setting-label">${escapeHtml(t('hintMode'))}</span>
+        <div class="seg-toggle" role="group" aria-label="${escapeHtml(t('hintMode'))}">
+          <button id="hintAlwaysOn" class="seg-btn ${state.alwaysShowHint ? 'is-on' : ''}">${escapeHtml(t('hintAlways'))}</button>
+          <button id="hintAlwaysOff" class="seg-btn ${state.alwaysShowHint ? '' : 'is-on'}">${escapeHtml(t('hintManual'))}</button>
+        </div>
+      </div>
+
       <button class="sheet-close" id="closeSettings">${escapeHtml(t('close'))}</button>
     </div>
   `;
@@ -104,6 +116,16 @@ function openSettingsSheet() {
   document.getElementById('fontDown').onclick = () => stepFont(-10);
   document.getElementById('fontUp').onclick = () => stepFont(10);
   document.getElementById('fontSlider').oninput = (e) => setFontScale(parseInt(e.target.value, 10));
+
+  const setHintMode = (on) => {
+    state.alwaysShowHint = on;
+    localStorage.setItem(LS_KEYS.alwaysHint, String(on));
+    document.getElementById('hintAlwaysOn').classList.toggle('is-on', on);
+    document.getElementById('hintAlwaysOff').classList.toggle('is-on', !on);
+    if (state.route === 'quiz') renderQuiz(); // 背面のクイズ画面に即反映（シートは開いたまま）
+  };
+  document.getElementById('hintAlwaysOn').onclick = () => setHintMode(true);
+  document.getElementById('hintAlwaysOff').onclick = () => setHintMode(false);
 
   document.getElementById('languageSelect').onchange = (e) => {
     state.lang = e.target.value;

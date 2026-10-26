@@ -68,6 +68,7 @@ function startQuizFromCsvText(csvText) {
     sourceQuestions,
     questions: quizQuestions,
     answers: new Array(quizQuestions.length).fill(null),
+    hintShown: new Array(quizQuestions.length).fill(false), // ヒントボタンで個別に開いた問題
     index: 0,
   };
   state.route = 'quiz';

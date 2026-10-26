@@ -43,16 +43,26 @@ function stripBom(text) {
 function loadQuestionsFromCsv(rawText) {
   const text = stripBom(rawText || '');
   const rows = parseCsv(text);
+  if (rows.length === 0) return [];
   let startIndex = 0;
-  if (rows[0].join('').includes('問題') || /question/i.test(rows[0].join(''))) startIndex = 1;
+  const hasHeader = rows[0].join('').includes('問題') || /question/i.test(rows[0].join(''));
+  if (hasHeader) startIndex = 1;
+
+  // 列構成：4列以上 = 問題, ヒント, 解答, 解説 ／ 3列 = 問題, 解答, 解説（旧形式・ヒントなし）
+  // ヘッダー行があればその列数、なければ全行の最大列数で判定
+  const colCount = hasHeader
+    ? rows[0].length
+    : Math.max(...rows.map(r => r.length));
+  const hasHintCol = colCount >= 4;
 
   const questions = [];
   for (let i = startIndex; i < rows.length; i++) {
     const row = rows[i];
     const question = (row[0] || '').trim();
-    const answer = (row[1] || '').trim();
-    const explanation = (row[2] || '').trim();
-    questions.push({ question, answer, explanation });
+    const hint = hasHintCol ? (row[1] || '').trim() : '';
+    const answer = ((hasHintCol ? row[2] : row[1]) || '').trim();
+    const explanation = ((hasHintCol ? row[3] : row[2]) || '').trim();
+    questions.push({ question, hint, answer, explanation });
   }
   return questions;
 }

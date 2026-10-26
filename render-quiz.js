@@ -6,10 +6,14 @@ function renderQuiz() {
   const selected = answers[index];
   const answered = selected !== null;
   const isCorrect = selected === current.data.answer;
+  const hint = current.data.hint || '';
+  const hasHint = hint !== '';
+  const hintVisible = hasHint && (state.alwaysShowHint || state.quiz.hintShown[index]);
 
   const app = document.getElementById('app');
   app.innerHTML = `
-    ${headerHtml(t('quizTitle', index + 1, total), { onBack: true, showEdit: true, onTitleClick: true })}
+    ${headerHtml(t('quizTitle', index + 1, total), { onBack: true, showEdit: true, onTitleClick: true,
+      showHint: true, hintActive: hintVisible, hintDisabled: !hasHint || state.alwaysShowHint })}
     <div class="progress-wrap">
       <div class="progress-track"><div class="progress-fill" style="width:${((index) / total) * 100}%;"></div></div>
       <div class="progress-caption"><span>${escapeHtml(t('progress'))}</span><span>${index + 1} / ${total}</span></div>
@@ -20,6 +24,13 @@ function renderQuiz() {
         <span class="question-tab">Q${index + 1}</span>
         <div class="question-text selectable-text">${escapeHtml(current.data.question)}</div>
       </div>
+
+      ${hintVisible ? `
+        <div class="hint-card">
+          <span class="hint-label">💡 ${escapeHtml(t('hintLabel'))}</span>
+          <div class="hint-text selectable-text">${escapeHtmlWithBreaks(hint)}</div>
+        </div>
+      ` : ''}
 
       <div class="choices" id="choicesWrap">
         ${current.choices.map((choice, ci) => {
@@ -68,6 +79,11 @@ function renderQuiz() {
 
   bindHeaderCommon();
   document.getElementById('editQuestionBtn').onclick = openEditQuestionSheet;
+  document.getElementById('hintBtn').onclick = () => {
+    if (!hasHint || state.alwaysShowHint) return;
+    state.quiz.hintShown[index] = !state.quiz.hintShown[index];
+    renderQuiz();
+  };
   document.getElementById('headerTitle').onclick = openJumpSheet;
   document.getElementById('headerBack').onclick = () => {
     if (confirm(t('quizExitConfirm'))) {
@@ -147,6 +163,10 @@ function openEditQuestionSheet() {
           <textarea id="editQuestionText" class="editor-textarea selectable-text" style="min-height:80px;">${escapeHtml(current.data.question)}</textarea>
         </div>
         <div>
+          <label class="field-label" for="editHintText">${escapeHtml(t('hintField'))}</label>
+          <textarea id="editHintText" class="editor-textarea selectable-text" style="min-height:48px;">${escapeHtml(current.data.hint || '')}</textarea>
+        </div>
+        <div>
           <label class="field-label" for="editAnswerText">${escapeHtml(t('answerField'))}</label>
           <textarea id="editAnswerText" class="editor-textarea selectable-text" style="min-height:48px;">${escapeHtml(current.data.answer)}</textarea>
         </div>
@@ -169,11 +189,13 @@ function openEditQuestionSheet() {
 
   document.getElementById('saveEditQuestionBtn').onclick = () => {
     const q = document.getElementById('editQuestionText').value.trim();
+    const hi = document.getElementById('editHintText').value.trim();
     const a = document.getElementById('editAnswerText').value.trim();
     const ex = document.getElementById('editExplanationText').value.trim();
 
     // 元データを直接更新（同一オブジェクト参照）
     current.data.question = q;
+    current.data.hint = hi;
     current.data.answer = a;
     current.data.explanation = ex;
 

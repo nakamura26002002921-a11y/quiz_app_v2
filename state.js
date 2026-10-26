@@ -3,12 +3,12 @@
    ========================================================================== */
 
 const SAMPLE_CSV =
-`問題,解答,解説
-日本の首都はどこ？,東京,東京都は1868年以降日本の首都機能が置かれている。
-富士山がある都道府県は？（複数のうち代表的な1つ）,静岡県,富士山は静岡県と山梨県にまたがっている。
-「桃太郎」に出てこない動物は？,タヌキ,桃太郎の家来はイヌ・サル・キジの3匹。
-日本で一番長い川は？,信濃川,信濃川は全長約367kmで日本最長。
-江戸幕府を開いたのは誰？,徳川家康,1603年に征夷大将軍に任命され江戸幕府を開いた。
+`問題,ヒント,解答,解説
+日本の首都はどこ？,関東地方にある,東京,東京都は1868年以降日本の首都機能が置かれている。
+富士山がある都道府県は？（複数のうち代表的な1つ）,東海地方,静岡県,富士山は静岡県と山梨県にまたがっている。
+「桃太郎」に出てこない動物は？,家来は3匹,タヌキ,桃太郎の家来はイヌ・サル・キジの3匹。
+日本で一番長い川は？,新潟県を流れる,信濃川,信濃川は全長約367kmで日本最長。
+江戸幕府を開いたのは誰？,1603年,徳川家康,1603年に征夷大将軍に任命され江戸幕府を開いた。
 `;
 
 const LS_KEYS = {
@@ -17,6 +17,7 @@ const LS_KEYS = {
   shuffle: 'quizapp.shuffleOrder',
   lang: 'quizapp.lang',
   skipStep: 'quizapp.skipStep',
+  alwaysHint: 'quizapp.alwaysShowHint',
 };
 
 function getLang() {
@@ -34,6 +35,7 @@ const state = {
   choiceCount: parseInt(localStorage.getItem(LS_KEYS.choiceCount) || '4', 10),
   shuffleOrder: localStorage.getItem(LS_KEYS.shuffle) !== 'false',
   skipStep: parseInt(localStorage.getItem(LS_KEYS.skipStep) || '5', 10), // n問飛ばし移動の既定値
+  alwaysShowHint: localStorage.getItem(LS_KEYS.alwaysHint) === 'true', // ヒントを常に表示するか
   quiz: null,              // { questions: [...], answers: [...], index: 0 }
 };
 
